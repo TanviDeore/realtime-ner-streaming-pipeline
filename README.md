@@ -3,21 +3,21 @@ pip install newsapi-python kafka-python pyspark spacy \
 python -m spacy download en_core_web_sm
 
 # Start Kafka Server (WSL)
-cd <your-kafka-folder> \
+cd 'your-kafka-folder' \
 KAFKA_CLUSTER_ID="$(bin/kafka-storage.sh random-uuid)" \
 bin/kafka-storage.sh format --standalone -t $KAFKA_CLUSTER_ID -c config/server.properties \
 bin/kafka-server-start.sh config/server.properties
 
 # Start Elasticssearch (PowerShell)
-cd <your-elasticsearch-folder> \
+cd 'your-elasticsearch-folder' \
 bin\elasticsearch.bat
 
 # Start Kibana (PowerShell)
-cd <your-kibana-folder> \
+cd 'your-kibana-folder' \
 bin\kibana.bat
 
 # Start Logstash with NER pipeline (PowerShell) (create ner.conf)
-cd <your-logstash-folder> \
+cd 'your-logstash-folder' \
 bin\logstash.bat -f pipeline\ner.conf
 
 # Start the Kafka Producer (WSL) (if interval not given, default interval is 30)
