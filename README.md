@@ -1,23 +1,23 @@
 # Installation of dependancies
-pip install newsapi-python kafka-python pyspark spacy
+pip install newsapi-python kafka-python pyspark spacy \
 python -m spacy download en_core_web_sm
 
 # Start Kafka Server (WSL)
-cd <your-kafka-folder>
-KAFKA_CLUSTER_ID="$(bin/kafka-storage.sh random-uuid)"
-bin/kafka-storage.sh format --standalone -t $KAFKA_CLUSTER_ID -c config/server.properties
+cd <your-kafka-folder> \
+KAFKA_CLUSTER_ID="$(bin/kafka-storage.sh random-uuid)" \
+bin/kafka-storage.sh format --standalone -t $KAFKA_CLUSTER_ID -c config/server.properties \
 bin/kafka-server-start.sh config/server.properties
 
 # Start Elasticssearch (PowerShell)
-cd <your-elasticsearch-folder>
+cd <your-elasticsearch-folder> \
 bin\elasticsearch.bat
 
 # Start Kibana (PowerShell)
-cd <your-kibana-folder>
+cd <your-kibana-folder> \
 bin\kibana.bat
 
 # Start Logstash with NER pipeline (PowerShell) (create ner.conf)
-cd <your-logstash-folder>
+cd <your-logstash-folder> \
 bin\logstash.bat -f pipeline\ner.conf
 
 # Start the Kafka Producer (WSL) (if interval not given, default interval is 30)
@@ -27,17 +27,17 @@ python3 producer.py --interval 45
 spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.2 spark_consumer.py
 
 # Open Kibana, create data view and visualization, and observe the streaming entity counts.
-• Open localhost:5601
-• Go to Stack Management → Data Views → Create data view
-• Name: new_data
-• Index pattern: named-entities-*
-• Timestamp field: @timestamp
-• Save
-• Create a Bar Chart:
-• Go to Analytics → Visualize Library → Create visualization → Lens
-• Select data view: new_data
-• Drag entity.keyword to the X-axis (Top values, size = 10)
-• Drag Count to the Y-axis
+• Open localhost:5601 \
+• Go to Stack Management → Data Views → Create data view \
+• Name: new_data \
+• Index pattern: named-entities-* \
+• Timestamp field: @timestamp \
+• Save \
+• Create a Bar Chart: \
+• Go to Analytics → Visualize Library → Create visualization → Lens \
+• Select data view: new_data \
+• Drag entity.keyword to the X-axis (Top values, size = 10) \
+• Drag Count to the Y-axis \
 
 # Data Source 
 Used NewsAPI as streaming data source. The producer script calls get_top_headlines every 30 seconds (default interval unless you pass any other value), also added a topic switching loop in the producer. The script changes the NewsAPI query category every 20 minutes. i.e., during each time window, the producer fetches news from a different topic category. This approach ensures that the incoming data slowly shifts from one domain to another. This helps produce noticeable changes in the extracted entities over time.
